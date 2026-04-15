@@ -7,32 +7,34 @@ import type { LoginBody } from "./dto/login.dto";
 import type { User } from "@prisma/client";
 
 export class AuthService {
-	constructor(
-		private readonly authRepository: AuthRepository,
-		private readonly usersService: UsersService
-	) {}
+  constructor(
+    private readonly authRepository: AuthRepository,
+    private readonly usersService: UsersService,
+  ) {}
 
-	async register(payload: CreateUserBody): Promise<User> {
-		const passwordHash = await bcrypt.hash(payload.password, 10);
-		return this.usersService.create({
-			name: payload.name,
-			email: payload.email,
-			password: passwordHash
-		});
-	}
+  async register(payload: CreateUserBody): Promise<User> {
+    const passwordHash = await bcrypt.hash(payload.password, 10);
+    return this.usersService.create({
+      name: payload.name,
+      email: payload.email,
+      password: passwordHash,
+    });
+  }
 
-	async login(payload: LoginBody): Promise<User> {
-		const user = await this.authRepository.findByEmail(payload.email);
-		if (!user) {
-			throw new HttpError(401, "Email yoki parol noto'g'ri");
-		}
+  async login(payload: LoginBody): Promise<User> {
+    const user = await this.authRepository.findByEmail(payload.email);
+    if (!user) {
+      throw new HttpError(401, "Email yoki parol noto'g'ri");
+    }
 
-		const isPasswordCorrect = await bcrypt.compare(payload.password, user.password);
-		if (!isPasswordCorrect) {
-			throw new HttpError(401, "Email yoki parol noto'g'ri");
-		}
+    const isPasswordCorrect = await bcrypt.compare(
+      payload.password,
+      user.password,
+    );
+    if (!isPasswordCorrect) {
+      throw new HttpError(401, "Email yoki parol noto'g'ri");
+    }
 
-		return user;
-	}
+    return user;
+  }
 }
-

@@ -5,16 +5,18 @@ import { UsersService } from "./users.service";
 import { usersController } from "./users.controller";
 
 export type UsersModule = {
-	usersRepository: UsersRepository;
-	usersService: UsersService;
+  usersRepository: UsersRepository;
+  usersService: UsersService;
 };
 
-export async function usersModule(fastify: FastifyInstance, prisma: PrismaClient): Promise<UsersModule> {
-	const usersRepository = new UsersRepository(prisma);
-	const usersService = new UsersService(usersRepository);
+export async function usersModule(
+  fastify: FastifyInstance,
+  prisma: PrismaClient,
+): Promise<UsersModule> {
+  const usersRepository = new UsersRepository(prisma);
+  const usersService = new UsersService(usersRepository);
 
-	await fastify.register(usersController, { prefix: "/users" });
+  await fastify.register(usersController, { prefix: "/users" });
 
-	return { usersRepository, usersService };
+  return { usersRepository, usersService };
 }
-
