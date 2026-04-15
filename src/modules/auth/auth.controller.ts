@@ -37,8 +37,8 @@ export async function authController(
       });
 
       return reply.code(201).send({
-        accessToken,
         user: serializeAuthUser(user),
+        accessToken,
       });
     } catch (error) {
       if (error instanceof ZodError) {
@@ -59,8 +59,8 @@ export async function authController(
       });
 
       return reply.send({
-        accessToken,
         user: serializeAuthUser(user),
+        accessToken,
       });
     } catch (error) {
       if (error instanceof ZodError) {
